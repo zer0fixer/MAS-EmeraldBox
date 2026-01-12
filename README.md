@@ -1,6 +1,6 @@
 # Imaginary Submod
 
-A comprehensive customization submod for Monika After Story.
+Transform your Monika After Story experience with custom visual packs and ambient particles. Personalize every detail of Monika's appearance—from her eyes and expressions to accessories and room elements—while adding atmospheric effects like falling snow, sakura petals, and floating hearts.
 
 ## ✨ Features
 
@@ -41,12 +41,13 @@ Add atmospheric particles to enhance the mood:
 - Dust - Subtle floating dust motes
 - Hearts - Romantic hearts
 - Stars - Sparkling stars
+- Bubbles - Floating bubbles 🫧
 
 **Falling particles** (fall from top to bottom):
 - Sakura - Cherry blossom petals
 - Snow - Snowflakes ❄️
 - Leaves - Autumn leaves 🍂
-- Rain - Rain drops 🌧️
+- Confetti - Colorful confetti �
 
 **Settings:**
 - Adjustable particle count (5-30)
