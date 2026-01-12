@@ -7,16 +7,23 @@ A comprehensive customization submod for Monika After Story.
 ### 🎨 Visual Packs
 Customize Monika's appearance and accessories with sprite packs:
 
-- **Monika**
-  - Face (expressions)
-  - Arms & Hands (skin tones, accessories)
-  - Torso & Head (body base)
+- **Monika - Face Parts**
+  - Eyes
+  - Eyebrows
+  - Mouth
+  - Nose
+  - Blush
+
+- **Monika - Body Parts**
+  - Arms & Hands
+  - Torso & Head
 
 - **Accessories**
   - Coffee Mug
   - Hot Chocolate Mug
   - Promise Ring
   - Quetzal Plushie
+  - Quetzal Mid (alternative pose)
   - Roses
 
 - **Room**
@@ -28,12 +35,24 @@ Customize Monika's appearance and accessories with sprite packs:
   - Pong paddles
 
 ### ✨ Ambient Particles
-Add floating particles behind Monika for atmosphere:
-- Multiple particle types (Sakura, Dust, etc.)
+Add atmospheric particles to enhance the mood:
+
+**Floating particles** (random movement):
+- Dust - Subtle floating dust motes
+- Hearts - Romantic hearts
+- Stars - Sparkling stars
+
+**Falling particles** (fall from top to bottom):
+- Sakura - Cherry blossom petals
+- Snow - Snowflakes ❄️
+- Leaves - Autumn leaves 🍂
+- Rain - Rain drops 🌧️
+
+**Settings:**
 - Adjustable particle count (5-30)
-- Layer control (Behind background, Behind Monika, In front)
+- Layer control (Far Back, Behind Monika, In Front)
 - Auto-hides during games
-- Only visible in Monika's current room (submods that move her, like dates or tours, will hide particles)
+- Only visible in Monika's current room
 
 ### 🔧 Easy Configuration
 - Settings panel in Submods menu
@@ -72,53 +91,74 @@ This guide helps sprite makers understand where to place their custom packs.
 ```
 monika/
 └── custom/
-    ├── face/              # Monika's facial expressions
-    │   └── [pack_name]/   # Your pack folder
-    │       └── *.png      # Expression files
     │
+    │   # === MONIKA FACE PARTS
+    ├── eyes/              # Eyes only
+    │   └── [pack_name]/
+    │       └── face-eyes-*.png
+    │
+    ├── eyebrows/          # Eyebrows only
+    │   └── [pack_name]/
+    │       └── face-eyebrows-*.png
+    │
+    ├── mouth/             # Mouth only
+    │   └── [pack_name]/
+    │       └── face-mouth-*.png
+    │
+    ├── nose/              # Nose only
+    │   └── [pack_name]/
+    │       └── face-nose-*.png
+    │
+    ├── blush/             # Blush only
+    │   └── [pack_name]/
+    │       └── face-blush-*.png
+    │
+    │   # === MONIKA BODY PARTS
     ├── arms/              # Arms & Hands
     │   └── [pack_name]/
-    │       └── arms-*.png # Only files starting with "arms-"
+    │       └── arms-*.png
     │
     ├── torso/             # Torso & Head (body base)
     │   └── [pack_name]/
-    │       └── body-*.png # Only files starting with "body-"
+    │       └── body-*.png
     │
-    ├── mug/               # Coffee Mug accessory
+    │   # === ACCESSORIES
+    ├── mug/               # Coffee Mug
     │   └── [pack_name]/
-    │       └── *.png
     │
-    ├── hotchoc_mug/       # Hot Chocolate Mug accessory
+    ├── hotchoc_mug/       # Hot Chocolate Mug
     │   └── [pack_name]/
-    │       └── *.png
     │
-    ├── promisering/       # Promise Ring accessory
+    ├── promisering/       # Promise Ring
     │   └── [pack_name]/
-    │       └── *.png      # Use NEW format: 2-10.png, 3-10.png, etc.
     │
-    ├── quetzal/           # Quetzal Plushie accessory
+    ├── quetzal/           # Quetzal Plushie (base pose)
     │   └── [pack_name]/
-    │       └── *.png
     │
-    ├── roses/             # Roses accessory
+    ├── quetzal_mid/       # Quetzal Plushie (mid pose)
     │   └── [pack_name]/
-    │       └── *.png
     │
+    ├── roses/             # Roses
+    │   └── [pack_name]/
+    │
+    │   # === ROOM
     ├── calendar/          # Room calendar
     │   └── [pack_name]/
-    │       └── *.png
     │
-    ├── nou/               # NOU card game sprites
+    │   # === GAMES
+    ├── nou/               # NOU card game
     │   └── [pack_name]/
-    │       └── *.png
     │
-    ├── chess/             # Chess game sprites
+    ├── chess/             # Chess game
     │   └── [pack_name]/
-    │       └── *.png
     │
-    └── pong/              # Pong game sprites
-        └── [pack_name]/
-            └── *.png
+    ├── pong/              # Pong game
+    │   └── [pack_name]/
+    │
+    └── _backup_mas/       # ⚠️ DO NOT MODIFY - Auto-generated backups
+        ├── face/
+        ├── body/
+        └── ...
 ```
 
 ## How to Create a Pack
@@ -160,15 +200,30 @@ custom/
 
 ## File Naming Conventions
 
+### For Face Parts
+Each face subcategory has a specific prefix:
+
+| Category | Prefix | Example |
+|----------|--------|---------|
+| Eyes | `face-eyes-` | `face-eyes-normal.png` |
+| Eyebrows | `face-eyebrows-` | `face-eyebrows-mid.png` |
+| Mouth | `face-mouth-` | `face-mouth-smile.png` |
+| Nose | `face-nose-` | `face-nose-def.png` |
+| Blush | `face-blush-` | `face-blush-full.png` |
+
+> **Tip:** Also include leaning variants with `face-leaning-def-` prefix for poses!
+
+### For Body Parts
+| Category | Prefix | Example |
+|----------|--------|---------|
+| Arms | `arms-` | `arms-crossed-10.png` |
+| Torso | `body-` | `body-def-0.png` |
+
 ### For Accessories (promisering, mug, etc.)
 Use the **NEW format** (MAS 0.12.16+):
 - `0.png`, `2-10.png`, `3-10.png`, etc.
 - **Do NOT use** the old `acs-[name]-` prefix
 - The submod automatically converts for older MAS versions
-
-### For Arms & Torso
-- **Arms**: Files MUST start with `arms-` (e.g., `arms-crossed-10.png`)
-- **Torso**: Files MUST start with `body-` (e.g., `body-def-0.png`)
 
 
 ## Incomplete Packs - Don't Worry!
