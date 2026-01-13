@@ -1,4 +1,4 @@
-# Imaginary Submod
+# Emerald Box
 
 Transform your Monika After Story experience with custom visual packs and ambient particles. Personalize every detail of Monika's appearance—from her eyes and expressions to accessories and room elements—while adding atmospheric effects like falling snow, sakura petals, and floating hearts.
 
