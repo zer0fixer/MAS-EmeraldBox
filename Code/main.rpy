@@ -101,11 +101,7 @@ screen eb_settings_pane():
                 selected persistent._eb_particles_enabled
                 action [
                     ToggleField(persistent, "_eb_particles_enabled"),
-                    If(
-                        persistent._eb_particles_enabled,
-                        true=Function(eb_reload_particles),
-                        false=Function(eb_destroy_particles)
-                    )
+                    Function(eb_on_particles_toggle)
                 ]
         
         # Particle type selector

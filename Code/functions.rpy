@@ -268,6 +268,44 @@ init python:
 
 init python:
     
+    def eb_on_particles_toggle():
+        """Handle particles toggle. Called after ToggleField changes the value."""
+        global eb_sprite_manager, eb_particle_list
+        
+        if persistent._eb_particles_enabled:
+            # Now enabled - create and show particles
+            eb_create_particles()
+            eb_show_particles()
+        else:
+            # Now disabled - make all particles invisible first
+            if eb_particle_list:
+                for particle in eb_particle_list:
+                    try:
+                        # Set alpha to 0 to make invisible
+                        t = Transform(particle.img_path, alpha=0.0, zoom=particle.zoom)
+                        particle.set_child(t)
+                    except:
+                        pass
+            
+            # Force redraw with invisible particles
+            if eb_sprite_manager is not None:
+                try:
+                    eb_sprite_manager.redraw(0)
+                except:
+                    pass
+                del eb_sprite_manager
+                eb_sprite_manager = None
+            
+            eb_particle_list = []
+            
+            # Hide from layer
+            try:
+                renpy.hide("eb_particles_obj", layer="master")
+            except:
+                pass
+            
+        renpy.restart_interaction()
+    
     def eb_next_type():
         """Change to the next particle type."""
         types = store.eb.PARTICLE_TYPES

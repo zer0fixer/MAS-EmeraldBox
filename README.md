@@ -1,6 +1,6 @@
 # Emerald Box
 
-Transform your Monika After Story experience with custom visual packs and ambient particles. Personalize every detail of Monika's appearance—from her eyes and expressions to accessories and room elements—while adding atmospheric effects like falling snow, sakura petals, and floating hearts.
+Transform your Monika After Story experience with custom visual packs and ambient particles. Personalize every detail of Monika's appearance from her eyes and expressions to accessories and room elements while adding atmospheric effects like falling snow, sakura petals, and floating hearts.
 
 ## ✨ Features
 
@@ -41,13 +41,13 @@ Add atmospheric particles to enhance the mood:
 - Dust - Subtle floating dust motes
 - Hearts - Romantic hearts
 - Stars - Sparkling stars
-- Bubbles - Floating bubbles 🫧
+- Bubbles - Floating bubbles
 
 **Falling particles** (fall from top to bottom):
 - Sakura - Cherry blossom petals
-- Snow - Snowflakes ❄️
-- Leaves - Autumn leaves 🍂
-- Confetti - Colorful confetti �
+- Snow - Snowflakes
+- Leaves - Autumn leaves
+- Confetti - Colorful confetti
 
 **Settings:**
 - Adjustable particle count (5-30)
@@ -59,6 +59,21 @@ Add atmospheric particles to enhance the mood:
 - Settings panel in Submods menu
 - Per-category pack selection via Talk → Misc → "Customize visuals"
 - Automatic backup and restore of original files
+
+## 💻 Compatibility
+
+| Platform | Visual Packs | Particles |
+|----------|--------------|-----------|
+| **Windows** | ✅ Full support | ✅ Full support |
+| **Linux/macOS** | ✅ Full support | ✅ Full support |
+| **Android** | ❌ Not supported | ✅ Works |
+
+> ⚠️ **Note:** Visual packs require file system access, which is limited on Android. Particles work on all platforms.
+>
+> Since various communities create their own Android ports with different versions and configurations, **full functionality cannot be guaranteed**. If you want to try the submod on Android, we recommend:
+> - **Make a full backup** of your MAS installation first
+> - Test with particles only (these work reliably)
+> - Visual packs may or may not work depending on your port
 
 ## 📦 Installation
 
@@ -80,11 +95,11 @@ DDLC/
 
 ---
 
-# Sprite Pack Structure Guide
+# 📖 Sprite Pack Structure Guide
 
 This guide helps sprite makers understand where to place their custom packs.
 
-## Folder Structure
+## 📁 Folder Structure
 
 > **Note:** The `custom/` folder is located inside the MAS game folder, NOT inside the submod folder.
 > Full path: `DDLC/game/mod_assets/monika/custom/`
@@ -162,14 +177,14 @@ monika/
         └── ...
 ```
 
-## How to Create a Pack
+## 🎨 How to Create a Pack
 
 1. **Choose a category** from the list above
 2. **Create a folder** with your pack name inside that category
 3. **Add your PNG files** following the original MAS naming convention
 4. **(Optional)** Add a `preview.png` for pack preview (will be ignored when copying)
 
-### Pack Naming Rules
+### 📝 Pack Naming Rules
 
 > ⚠️ **Important naming conventions:**
 > - Use **lowercase only** (no capital letters)
@@ -199,7 +214,7 @@ custom/
         └── preview.png             # Optional preview (ignored)
 ```
 
-## File Naming Conventions
+## 📄 File Naming Conventions
 
 ### For Face Parts
 Each face subcategory has a specific prefix:
@@ -227,7 +242,7 @@ Use the **NEW format** (MAS 0.12.16+):
 - The submod automatically converts for older MAS versions
 
 
-## Incomplete Packs - Don't Worry!
+## ✅ Incomplete Packs - Don't Worry!
 
 > 💡 **You don't need to include ALL files!**
 > 
@@ -238,14 +253,14 @@ For example, if you only want to change the promise ring appearance but not all 
 - The submod will detect missing files
 - It will offer to fill them with MAS defaults automatically
 
-## Tips for Sprite Makers
+## 💡 Tips for Sprite Makers
 
 1. **Match the original resolution**
 2. **Keep transparency** where applicable
 3. **Test your pack** before distributing
 4. **You can include only the files you want to change** - missing files will be auto-completed
 
-## MAS Version Compatibility
+## 🔄 MAS Version Compatibility
 
 The submod automatically handles file naming differences between:
 - **MAS 0.12.16+** (new folder structure)
