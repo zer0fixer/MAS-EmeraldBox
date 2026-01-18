@@ -259,7 +259,7 @@ For example, if you want to create a custom NOU card design:
 1. **Match the original resolution**
 2. **Keep transparency** where applicable
 3. **Test your pack** before distributing
-4. **You can include only the files you want to change** - missing files will be auto-completed
+4. **You can include only the files you want to change**
 
 ## 🔄 MAS Version Compatibility
 
