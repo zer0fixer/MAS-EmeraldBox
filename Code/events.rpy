@@ -80,6 +80,7 @@ label eb_skin_select:
         
         # Add utility options
         _menu_items.append(("Restore All Defaults", "restore"))
+        _menu_items.append(("Pack Structure Guide", "help"))
         _menu_items.append(("Nevermind", "cancel"))
     
     call screen eb_select_menu("Welcome!", _menu_items)
@@ -89,6 +90,11 @@ label eb_skin_select:
     
     elif _return == "restore":
         jump eb_restore_all
+    
+    elif _return == "help":
+        $ import webbrowser
+        $ webbrowser.open("https://github.com/zer0fixer/MAS-EmeraldBox?tab=readme-ov-file#-sprite-pack-structure-guide")
+        jump eb_skin_select
     
     else:
         # Selected a section, show categories in that section
@@ -242,6 +248,16 @@ label eb_skin_apply:
         
         _old_pack = skins.get_selected_pack(_eb_sel_category)
         _changed = (_new_pack != _old_pack)
+        
+        # Check if pack is empty (has no files)
+        _is_empty = False
+        if _new_pack:
+            _pack_files = skins.get_pack_files(_eb_sel_category, _new_pack)
+            _is_empty = len(_pack_files) == 0
+    
+    if _is_empty:
+        "This pack folder is empty. Please add files to it first."
+        jump eb_section_categories
     
     if not _changed:
         "No changes made."
