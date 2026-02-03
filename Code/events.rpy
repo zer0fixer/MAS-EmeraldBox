@@ -80,7 +80,7 @@ label eb_skin_select:
         
         # Add utility options
         _menu_items.append(("Restore All Defaults", "restore"))
-        _menu_items.append(("Pack Structure Guide", "help"))
+        _menu_items.append(("Structure & Setup", "help"))
         _menu_items.append(("Nevermind", "cancel"))
     
     call screen eb_select_menu("Welcome!", _menu_items)
@@ -92,9 +92,7 @@ label eb_skin_select:
         jump eb_restore_all
     
     elif _return == "help":
-        $ import webbrowser
-        $ webbrowser.open("https://github.com/zer0fixer/MAS-EmeraldBox?tab=readme-ov-file#-sprite-pack-structure-guide")
-        jump eb_skin_select
+        jump eb_structure_setup
     
     else:
         # Selected a section, show categories in that section
@@ -312,3 +310,61 @@ label eb_skin_apply:
 #             return
 
 # Note: Incomplete packs dialog removed - packs now only apply their included files
+
+
+# ==============================================================================
+# STRUCTURE & SETUP MENU
+# Provides options for folder structure guide and auto-generation
+# ==============================================================================
+
+label eb_structure_setup:
+    python:
+        _setup_items = [
+            ("View Structure Guide (Web)", "web"),
+            ("Auto-generate Custom Folders", "generate"),
+            ("Nevermind", "cancel")
+        ]
+    
+    call screen eb_select_menu("Structure \u0026 Setup", _setup_items)
+    
+    if _return == "cancel" or _return is None:
+        jump eb_skin_select
+    
+    elif _return == "web":
+        # Open structure guide in browser
+        python:
+            import os
+            import sys
+            import subprocess
+            _url = "https://github.com/zer0fixer/MAS-EmeraldBox?tab=readme-ov-file#-sprite-pack-structure-guide"
+            try:
+                if sys.platform == "win32":
+                    os.startfile(_url)
+                elif sys.platform == "darwin":
+                    subprocess.Popen(["open", _url])
+                else:
+                    subprocess.Popen(["xdg-open", _url])
+            except Exception as e:
+                renpy.notify(_("Failed to open URL: {}").format(str(e)))
+        jump eb_structure_setup
+    
+    elif _return == "generate":
+        # Auto-generate missing custom folders
+        python:
+            _result = eb_create_custom_folders()
+            _created = _result["created"]
+            _existed = _result["existed"]
+        
+        if _created > 0:
+            "Created [_created] custom folder(s)."
+            if _existed > 0:
+                "[_existed] folder(s) already existed and were skipped."
+            "You can now add your sprite packs to these folders!"
+        else:
+            "All custom folders already exist!"
+            "Nothing to create."
+        
+        jump eb_structure_setup
+    
+    jump eb_skin_select
+

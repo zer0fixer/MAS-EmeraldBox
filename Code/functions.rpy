@@ -1219,4 +1219,37 @@ init python:
         new_pack = packs[prev_idx] if prev_idx > 0 else None
         skins.set_selected_pack(category, new_pack)
     
+    
+    def eb_create_custom_folders():
+        """
+        Create all custom folders for sprite packs if they don't exist.
+        Skips folders that already exist.
+        
+        RETURNS:
+            dict - {"created": int, "existed": int} counts of folders
+        """
+        import os
+        import store.eb_skins as skins
+        
+        created = 0
+        existed = 0
+        
+        # Get all category paths from CATEGORIES
+        for cat_key, cat_info in skins.CATEGORIES.items():
+            cat_path = skins.get_full_path(cat_info["path"])
+            
+            if os.path.exists(cat_path):
+                existed += 1
+            else:
+                try:
+                    os.makedirs(cat_path)
+                    created += 1
+                except Exception as e:
+                    store.mas_utils.mas_log.error(
+                        "Emerald Box: Failed to create folder {}: {}".format(cat_path, e)
+                    )
+        
+        return {"created": created, "existed": existed}
+    
     # Note: eb_apply_skins removed - packs now only apply their included files
+

@@ -20,7 +20,7 @@ init -990 python:
         author="ZeroFixer",
         name="Emerald Box",
         description="Customize Monika's appearance with visual packs (eyes, mouth, nose, arms, torso, accessories, games) and ambient particles (snow, sakura, leaves, and more).",
-        version="1.0.1",
+        version="1.0.2",
         settings_pane="eb_settings_pane"
     )
 
@@ -285,8 +285,10 @@ init -995 python in eb_folders:
         return "EmeraldBox"
 
     # Detect actual folder names (handles case variations)
-    EB_submods_folder = find_submods_folder()
-    _submods_full_path = _normalize_path(os.path.join(renpy.config.basedir, "game", EB_submods_folder))
+    # NOTE: Must use the absolute path to game/ directory, not current working directory
+    _game_dir_path = _normalize_path(os.path.join(renpy.config.basedir, "game"))
+    EB_submods_folder = find_submods_folder(_game_dir_path)
+    _submods_full_path = _normalize_path(os.path.join(_game_dir_path, EB_submods_folder))
     EB_eb_folder = find_eb_folder(_submods_full_path)
 
     # Build path constants
