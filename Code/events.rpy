@@ -325,7 +325,7 @@ label eb_structure_setup:
             ("Nevermind", "cancel")
         ]
     
-    call screen eb_select_menu("Structure \u0026 Setup", _setup_items)
+    call screen eb_select_menu("Structure & Setup", _setup_items)
     
     if _return == "cancel" or _return is None:
         jump eb_skin_select
