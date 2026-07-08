@@ -15,6 +15,8 @@ Customize Monika's appearance and accessories with sprite packs:
   - Mouth
   - Nose
   - Blush
+  - Tears
+  - Sweat Drop
 
 - **Monika - Body Parts**
   - Arms & Hands
@@ -23,6 +25,7 @@ Customize Monika's appearance and accessories with sprite packs:
 - **Accessories**
   - Coffee Mug
   - Hot Chocolate Mug
+  - Thermos Mug
   - Promise Ring
   - Quetzal Plushie
   - Quetzal Mid (alternative pose)
@@ -131,6 +134,14 @@ monika/
     │   └── [pack_name]/
     │       └── face-blush-*.png
     │
+    ├── tears/             # Tears only
+    │   └── [pack_name]/
+    │       └── face-tears-*.png
+    │
+    ├── sweatdrop/         # Sweat drop only
+    │   └── [pack_name]/
+    │       └── face-sweatdrop-*.png
+    │
     │   # === MONIKA BODY PARTS
     ├── arms/              # Arms & Hands
     │   └── [pack_name]/
@@ -145,6 +156,9 @@ monika/
     │   └── [pack_name]/
     │
     ├── hotchoc_mug/       # Hot Chocolate Mug
+    │   └── [pack_name]/
+    │
+    ├── thermos_mug/       # Thermos Mug
     │   └── [pack_name]/
     │
     ├── promisering/       # Promise Ring
@@ -228,6 +242,8 @@ Each face subcategory has a specific prefix:
 | Mouth | `face-mouth-` | `face-mouth-smile.png` |
 | Nose | `face-nose-` | `face-nose-def.png` |
 | Blush | `face-blush-` | `face-blush-full.png` |
+| Tears | `face-tears-` | `face-tears-streaming.png` |
+| Sweat Drop | `face-sweatdrop-` | `face-sweatdrop-def.png` |
 
 > **Tip:** Also include leaning variants with `face-leaning-def-` prefix for poses!
 
