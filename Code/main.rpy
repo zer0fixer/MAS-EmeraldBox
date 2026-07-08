@@ -20,7 +20,7 @@ init -990 python:
         author="ZeroFixer",
         name="Emerald Box",
         description="Customize Monika's appearance with visual packs (eyes, mouth, nose, arms, torso, accessories, games) and ambient particles (snow, sakura, leaves, and more).",
-        version="1.0.2",
+        version="1.0.3",
         settings_pane="eb_settings_pane"
     )
 
@@ -52,6 +52,8 @@ init -999:
     default persistent._eb_mouth_pack = None
     default persistent._eb_nose_pack = None
     default persistent._eb_blush_pack = None
+    default persistent._eb_tears_pack = None
+    default persistent._eb_sweatdrop_pack = None
     
     # Monika body parts
     default persistent._eb_arms_pack = None
@@ -60,6 +62,7 @@ init -999:
     # Accessories
     default persistent._eb_mug_pack = None
     default persistent._eb_hotchoc_pack = None
+    default persistent._eb_thermos_mug_pack = None
     default persistent._eb_promisering_pack = None
     default persistent._eb_quetzal_pack = None
     default persistent._eb_quetzal_mid_pack = None
@@ -104,30 +107,26 @@ screen eb_settings_pane():
                     Function(eb_on_particles_toggle)
                 ]
         
-        # Particle type selector
-        hbox:
-            box_wrap False
-            spacing 5
+        # Particle type selector (Improved direct selection UI)
+        vbox:
+            spacing 2
             text _("Particle Type:")
             
-            textbutton _("<"):
-                style "navigation_button"
-                action Function(eb_prev_type)
-                sensitive persistent._eb_particles_enabled
-            
-            python:
-                _particle_display_name = store.eb.PARTICLE_TYPE_NAMES.get(
-                    persistent._eb_particle_type, 
-                    persistent._eb_particle_type
-                )
-            text "[_particle_display_name]":
-                min_width 80
-                text_align 0.5
-            
-            textbutton _(">"):
-                style "navigation_button"
-                action Function(eb_next_type)
-                sensitive persistent._eb_particles_enabled
+            hbox:
+                box_wrap True
+                spacing 5
+                xmaximum 600
+                
+                for p_type in store.eb.PARTICLE_TYPES:
+                    textbutton store.eb.PARTICLE_TYPE_NAMES[p_type]:
+                        text_font "mod_assets/font/m1_fixed.ttf"
+                        text_size 32
+                        selected (persistent._eb_particle_type == p_type)
+                        action [
+                            SetField(persistent, "_eb_particle_type", p_type),
+                            Function(eb_on_particles_toggle) # Re-initializes particles
+                        ]
+                        sensitive persistent._eb_particles_enabled
         
         # Particle count control
         hbox:
@@ -304,6 +303,7 @@ init -995 python in eb_folders:
     EB_PARTICLES_LEAVES = _join_path(EB_PARTICLES, "leaves")
     EB_PARTICLES_CONFETTI = _join_path(EB_PARTICLES, "confetti")
     EB_PARTICLES_BUBBLES = _join_path(EB_PARTICLES, "bubbles")
+    EB_PARTICLES_NOTES = _join_path(EB_PARTICLES, "notes")
     
     # Mapping of particle types to their asset paths
     PARTICLE_TYPE_PATHS = {
@@ -314,7 +314,8 @@ init -995 python in eb_folders:
         "snow": EB_PARTICLES_SNOW,
         "leaves": EB_PARTICLES_LEAVES,
         "confetti": EB_PARTICLES_CONFETTI,
-        "bubbles": EB_PARTICLES_BUBBLES
+        "bubbles": EB_PARTICLES_BUBBLES,
+        "notes": EB_PARTICLES_NOTES
     }
 
 # ==============================================================================
@@ -326,7 +327,7 @@ init -990 python in eb:
     import store
     
     # List of available particle types
-    PARTICLE_TYPES = ["dust", "hearts", "stars", "sakura", "snow", "leaves", "confetti", "bubbles"]
+    PARTICLE_TYPES = ["dust", "hearts", "stars", "sakura", "snow", "leaves", "confetti", "bubbles", "notes"]
     
     # Display names shown in settings UI
     PARTICLE_TYPE_NAMES = {
@@ -337,7 +338,8 @@ init -990 python in eb:
         "snow": "Snow",
         "leaves": "Leaves",
         "confetti": "Confetti",
-        "bubbles": "Bubbles"
+        "bubbles": "Bubbles",
+        "notes": "Music Notes"
     }
     
     # Movement modes for each particle type
@@ -351,7 +353,8 @@ init -990 python in eb:
         "snow": "falling",
         "leaves": "falling",
         "confetti": "falling",
-        "bubbles": "floating"  # Bubbles float around
+        "bubbles": "floating", # Bubbles float around
+        "notes": "floating"    # Music notes float
     }
 
 # Note: Face pack override removed - face parts are now copied directly to MAS folders

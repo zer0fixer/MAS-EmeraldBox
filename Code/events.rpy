@@ -45,11 +45,11 @@ label eb_skin_select:
         _sections = {
             "monika": {
                 "name": "Monika",
-                "categories": ["eyes", "eyebrows", "mouth", "nose", "blush", "arms", "torso"]
+                "categories": ["eyes", "eyebrows", "mouth", "nose", "blush", "tears", "sweatdrop", "arms", "torso"]
             },
             "accessories": {
                 "name": "Accessories",
-                "categories": ["mug", "hotchoc_mug", "promisering", "quetzal", "quetzal_mid", "roses"]
+                "categories": ["mug", "hotchoc_mug", "thermos_mug", "promisering", "quetzal", "quetzal_mid", "roses"]
             },
             "room": {
                 "name": "Room",
@@ -153,9 +153,9 @@ label eb_restore_all:
                 
                 _restored_count = 0
                 _categories = [
-                    "eyes", "eyebrows", "mouth", "nose", "blush",
+                    "eyes", "eyebrows", "mouth", "nose", "blush", "tears", "sweatdrop",
                     "arms", "torso",
-                    "mug", "hotchoc_mug", "calendar", "promisering", 
+                    "mug", "hotchoc_mug", "thermos_mug", "calendar", "promisering", 
                     "nou", "chess", "pong", "quetzal", "quetzal_mid", "roses"
                 ]
                 
@@ -265,7 +265,7 @@ label eb_skin_apply:
     $ skins.set_selected_pack(_eb_sel_category, _new_pack)
     
     # Restore original files if selecting default (for file-copy categories)
-    if not _new_pack and _eb_sel_category in ["eyes", "eyebrows", "mouth", "nose", "blush", "arms", "torso", "mug", "hotchoc_mug", "calendar", "promisering", "nou", "chess", "pong", "quetzal", "quetzal_mid", "roses"]:
+    if not _new_pack and _eb_sel_category in ["eyes", "eyebrows", "mouth", "nose", "blush", "tears", "sweatdrop", "arms", "torso", "mug", "hotchoc_mug", "thermos_mug", "calendar", "promisering", "nou", "chess", "pong", "quetzal", "quetzal_mid", "roses"]:
         python:
             _restored = eb_restore_mas_defaults(_eb_sel_category)
         if _restored:
@@ -322,6 +322,7 @@ label eb_structure_setup:
         _setup_items = [
             ("View Structure Guide (Web)", "web"),
             ("Auto-generate Custom Folders", "generate"),
+            ("Open Custom Folder", "open_folder"),
             ("Nevermind", "cancel")
         ]
     
@@ -363,6 +364,18 @@ label eb_structure_setup:
         else:
             "All custom folders already exist!"
             "Nothing to create."
+        
+        jump eb_structure_setup
+    
+    elif _return == "open_folder":
+        python:
+            _opened_path = eb_open_custom_folder()
+        
+        if _opened_path:
+            "Opening your custom folder..."
+        else:
+            "The custom folder doesn't exist yet."
+            "Use 'Auto-generate Custom Folders' first to create it!"
         
         jump eb_structure_setup
     

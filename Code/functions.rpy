@@ -532,6 +532,22 @@ init -990 python in eb_skins:
             "file_prefixes": ["face-blush-", "face-leaning-def-blush-"],
             "backup_key": "face"
         },
+        "tears": {
+            "path": CUSTOM_PATH + "tears/",
+            "persistent_key": "_eb_tears_pack",
+            "display_name": "Tears",
+            "mas_path": "mod_assets/monika/f/",
+            "file_prefixes": ["face-tears-", "face-leaning-def-tears-"],
+            "backup_key": "face"
+        },
+        "sweatdrop": {
+            "path": CUSTOM_PATH + "sweatdrop/",
+            "persistent_key": "_eb_sweatdrop_pack",
+            "display_name": "Sweat Drop",
+            "mas_path": "mod_assets/monika/f/",
+            "file_prefixes": ["face-sweatdrop-", "face-leaning-def-sweatdrop-"],
+            "backup_key": "face"
+        },
         
         # Monika body parts (share /b/ folder)
         "arms": {
@@ -587,6 +603,12 @@ init -990 python in eb_skins:
             "persistent_key": "_eb_roses_pack",
             "display_name": "Roses",
             "mas_path": "mod_assets/monika/a/roses/"
+        },
+        "thermos_mug": {
+            "path": CUSTOM_PATH + "thermos_mug/",
+            "persistent_key": "_eb_thermos_mug_pack",
+            "display_name": "Thermos Mug",
+            "mas_path": "mod_assets/monika/a/thermos_mug/"
         },
         
         # Room elements
@@ -834,9 +856,9 @@ init 100 python:
         Called on startup. Only copies if pack was modified since last apply.
         """
         categories_to_copy = [
-            "eyes", "eyebrows", "mouth", "nose", "blush",
+            "eyes", "eyebrows", "mouth", "nose", "blush", "tears", "sweatdrop",
             "arms", "torso",
-            "mug", "hotchoc_mug", "calendar", "promisering", 
+            "mug", "hotchoc_mug", "thermos_mug", "calendar", "promisering", 
             "nou", "chess", "pong", "quetzal", "quetzal_mid", "roses"
         ]
         
@@ -1250,6 +1272,40 @@ init python:
                     )
         
         return {"created": created, "existed": existed}
+    
+    
+    def eb_open_custom_folder():
+        """
+        Opens the custom/ folder in the system's file manager.
+        Multi-platform: Windows (explorer), macOS (open), Linux (xdg-open).
+        
+        RETURNS:
+            str  - The path that was opened, if successful.
+            None - If the folder doesn't exist or the platform is unsupported.
+        """
+        import os
+        import sys
+        import subprocess
+        import store.eb_skins as skins
+        
+        custom_path = skins.get_full_path(skins.CUSTOM_PATH)
+        
+        if not os.path.exists(custom_path):
+            return None
+        
+        try:
+            if sys.platform == "win32":
+                os.startfile(custom_path)
+            elif sys.platform == "darwin":
+                subprocess.Popen(["open", custom_path])
+            else:
+                subprocess.Popen(["xdg-open", custom_path])
+            return custom_path
+        except Exception as e:
+            store.mas_utils.mas_log.error(
+                "Emerald Box: Failed to open folder {}: {}".format(custom_path, e)
+            )
+            return None
     
     # Note: eb_apply_skins removed - packs now only apply their included files
 
