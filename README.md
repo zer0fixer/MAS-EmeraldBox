@@ -47,6 +47,7 @@ Add atmospheric particles to enhance the mood:
 - Hearts - Romantic hearts
 - Stars - Sparkling stars
 - Bubbles - Floating bubbles
+- Music Notes - Floating musical notes
 
 **Falling particles** (fall from top to bottom):
 - Sakura - Cherry blossom petals
