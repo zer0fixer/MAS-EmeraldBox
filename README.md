@@ -54,6 +54,11 @@ Add atmospheric particles to enhance the mood:
 - Snow - Snowflakes
 - Leaves - Autumn leaves
 - Confetti - Colorful confetti
+- Binary Code - Falling binary digits (Matrix-style code rain)
+
+**Pop Ups** (appear, hold, then fade out):
+- Just Monika - Mini "Just Monika. OK" alert windows at random positions
+- Windows Errors - Windows 7-style error dialogs at random positions
 
 **Settings:**
 - Adjustable particle count (5-30)
@@ -62,9 +67,11 @@ Add atmospheric particles to enhance the mood:
 - Only visible in Monika's current room
 
 ### 🔧 Easy Configuration
-- Settings panel in Submods menu
-- Per-category pack selection via Talk → Misc → "Customize visuals"
-- Automatic backup and restore of original files
+- Settings panel in Submods menu with **direct grid selection** using Monika's handwriting font.
+- Per-category pack selection via Talk → Misc → "Customize visuals".
+- **Auto-generate Custom Folders** to create the complete folder structure in a single click.
+- **Open Custom Folder** button to instantly open the custom directory in your system file manager (Windows, macOS, Linux).
+- Automatic backup and restore of original files when toggling packs.
 
 ## 💻 Compatibility
 
