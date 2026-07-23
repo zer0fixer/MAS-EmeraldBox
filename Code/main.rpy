@@ -107,24 +107,53 @@ screen eb_settings_pane():
                     Function(eb_on_particles_toggle)
                 ]
         
-        # Particle type selector (Improved direct selection UI)
+        # Particle type selector - split into two groups
         vbox:
-            spacing 2
-            text _("Particle Type:")
+            spacing 4
+            
+            # --- Group 1: Particles (floating + falling) ---
+            text _("Particles:")
             
             hbox:
                 box_wrap True
                 spacing 5
                 xmaximum 600
                 
-                for p_type in store.eb.PARTICLE_TYPES:
+                python:
+                    _particle_types = [p for p in store.eb.PARTICLE_TYPES if store.eb.PARTICLE_MOVEMENT_MODES.get(p, "floating") != "popup"]
+                
+                for p_type in _particle_types:
                     textbutton store.eb.PARTICLE_TYPE_NAMES[p_type]:
                         text_font "mod_assets/font/m1_fixed.ttf"
                         text_size 32
                         selected (persistent._eb_particle_type == p_type)
                         action [
                             SetField(persistent, "_eb_particle_type", p_type),
-                            Function(eb_on_particles_toggle) # Re-initializes particles
+                            Function(eb_on_particles_toggle)
+                        ]
+                        sensitive persistent._eb_particles_enabled
+            
+            null height 3
+            
+            # --- Group 2: Pop Ups ---
+            text _("Pop Ups:")
+            
+            hbox:
+                box_wrap True
+                spacing 5
+                xmaximum 600
+                
+                python:
+                    _popup_types = [p for p in store.eb.PARTICLE_TYPES if store.eb.PARTICLE_MOVEMENT_MODES.get(p, "floating") == "popup"]
+                
+                for p_type in _popup_types:
+                    textbutton store.eb.PARTICLE_TYPE_NAMES[p_type]:
+                        text_font "mod_assets/font/m1_fixed.ttf"
+                        text_size 32
+                        selected (persistent._eb_particle_type == p_type)
+                        action [
+                            SetField(persistent, "_eb_particle_type", p_type),
+                            Function(eb_on_particles_toggle)
                         ]
                         sensitive persistent._eb_particles_enabled
         
@@ -304,6 +333,9 @@ init -995 python in eb_folders:
     EB_PARTICLES_CONFETTI = _join_path(EB_PARTICLES, "confetti")
     EB_PARTICLES_BUBBLES = _join_path(EB_PARTICLES, "bubbles")
     EB_PARTICLES_NOTES = _join_path(EB_PARTICLES, "notes")
+    EB_PARTICLES_GLITCH = _join_path(EB_PARTICLES, "glitch")
+    EB_PARTICLES_JUSTMONIKA = _join_path(EB_PARTICLES, "justmonika")
+    EB_PARTICLES_ERRORS = _join_path(EB_PARTICLES, "errors")
     
     # Mapping of particle types to their asset paths
     PARTICLE_TYPE_PATHS = {
@@ -315,7 +347,10 @@ init -995 python in eb_folders:
         "leaves": EB_PARTICLES_LEAVES,
         "confetti": EB_PARTICLES_CONFETTI,
         "bubbles": EB_PARTICLES_BUBBLES,
-        "notes": EB_PARTICLES_NOTES
+        "notes": EB_PARTICLES_NOTES,
+        "glitch": EB_PARTICLES_GLITCH,
+        "justmonika": EB_PARTICLES_JUSTMONIKA,
+        "errors": EB_PARTICLES_ERRORS
     }
 
 # ==============================================================================
@@ -327,7 +362,7 @@ init -990 python in eb:
     import store
     
     # List of available particle types
-    PARTICLE_TYPES = ["dust", "hearts", "stars", "sakura", "snow", "leaves", "confetti", "bubbles", "notes"]
+    PARTICLE_TYPES = ["dust", "hearts", "stars", "sakura", "snow", "leaves", "confetti", "bubbles", "notes", "glitch", "justmonika", "errors"]
     
     # Display names shown in settings UI
     PARTICLE_TYPE_NAMES = {
@@ -339,7 +374,10 @@ init -990 python in eb:
         "leaves": "Leaves",
         "confetti": "Confetti",
         "bubbles": "Bubbles",
-        "notes": "Music Notes"
+        "notes": "Music Notes",
+        "glitch": "Binary Code",
+        "justmonika": "Just Monika",
+        "errors": "Windows Errors"
     }
     
     # Movement modes for each particle type
@@ -354,7 +392,10 @@ init -990 python in eb:
         "leaves": "falling",
         "confetti": "falling",
         "bubbles": "floating", # Bubbles float around
-        "notes": "floating"    # Music notes float
+        "notes": "floating",    # Music notes float
+        "glitch": "falling",     # Glitch/code drops fall
+        "justmonika": "popup",   # Just Monika popups appear in random screen spots
+        "errors": "popup"       # Windows error popups appear in random screen spots
     }
 
 # Note: Face pack override removed - face parts are now copied directly to MAS folders

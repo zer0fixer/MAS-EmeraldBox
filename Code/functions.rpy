@@ -20,6 +20,7 @@
 init python:
     import random
     import math
+    import store
     
     # Global particle system variables
     eb_sprite_manager = None
@@ -27,7 +28,6 @@ init python:
     
     # Pre-calculated angles for floating mode (8 directions, optimized)
     PRESET_ANGLES = [(math.cos(i * 0.785398), math.sin(i * 0.785398)) for i in range(8)]
-    
     
     def eb_get_particle_path(particle_id):
         """
@@ -58,6 +58,9 @@ init python:
         
         if amount is None:
             amount = persistent._eb_particle_count
+        
+        # Ensure temporary disabled flag is reset
+        persistent._eb_temp_disabled = False
         
         # Destroy existing particles first
         eb_destroy_particles()
@@ -90,25 +93,31 @@ init python:
         
         # Create displayable with Transform
         img_path = eb_get_particle_path(rand_img)
+        if not img_path:
+            return  # Skip particle creation if path is invalid
         t = Transform(img_path, alpha=rand_alpha, zoom=rand_zoom)
         
         # Create sprite in SpriteManager
         particle = eb_sprite_manager.create(t)
-        particle.img_path = img_path  # Cache path to avoid recalculating each frame
+        particle.img_path = img_path
+        particle.particle_type = particle_type  # Needed for falling glitch speed
         particle.alpha = rand_alpha
         particle.zoom = rand_zoom
         particle.movement_mode = movement_mode
         
         if movement_mode == "falling":
             # Falling mode: spawn distributed across screen initially
-            particle.speed = random.uniform(0.5, 1.5)  # Faster for falling
+            if particle_type == "glitch":
+                particle.speed = random.uniform(2.0, 4.5)  # Faster for falling code rain
+                particle.wind = 0.0
+            else:
+                particle.speed = random.uniform(0.5, 1.5)  # Faster for falling
+                particle.wind = random.uniform(-0.3, 0.3)  # Wind effect (horizontal drift)
+            
             particle.x = renpy.random.randint(0, config.screen_width)
             # On first creation, distribute across entire screen height
             # On respawn, will start above screen (handled in reposition)
             particle.y = renpy.random.randint(0, config.screen_height)
-            
-            # Wind effect (horizontal drift)
-            particle.wind = random.uniform(-0.3, 0.3)
             
             # Falling direction (mostly down with some horizontal)
             particle.dx = particle.wind
@@ -118,6 +127,18 @@ init python:
             particle.alpha = random.uniform(0.3, 0.6)
             particle.fadein = False
             particle.fadeout = False
+        elif movement_mode == "popup":
+            # Popup mode: stationary in random screen locations with staggered delays
+            particle.speed = 0.0
+            particle.dx = 0.0
+            particle.dy = 0.0
+            particle.x = renpy.random.randint(80, max(180, config.screen_width - 250))
+            particle.y = renpy.random.randint(80, max(180, config.screen_height - 200))
+            particle.alpha = 0.0
+            particle.state = "delay"
+            particle.delay_timer = random.uniform(0.0, 2.5)  # Stagger initial popups
+            particle.hold_time = random.uniform(1.2, 2.8)
+            particle.hold_timer = 0.0
         else:
             # Floating mode: random movement (optimized with preset angles)
             particle.speed = random.uniform(0.03, 0.15)
@@ -162,13 +183,42 @@ init python:
             particle.y += particle.dy
             
             # Check movement mode
-            if getattr(particle, 'movement_mode', 'floating') == "falling":
+            mode = particle.movement_mode
+            if mode == "falling":
                 # Falling mode: respawn at top when going off screen
                 if particle.y > config.screen_height + 50:
                     eb_reposition_particle(particle)
                 # Also respawn if too far left/right
                 elif particle.x < -50 or particle.x > config.screen_width + 50:
                     eb_reposition_particle(particle)
+            elif mode == "popup":
+                # Popup mode: 4-state machine (delay -> fadein -> hold -> fadeout)
+                state = getattr(particle, 'state', 'fadein')
+                
+                if state == "delay":
+                    particle.alpha = 0.0
+                    particle.delay_timer -= 0.016
+                    if particle.delay_timer <= 0.0:
+                        particle.state = "fadein"
+                        
+                elif state == "fadein":
+                    particle.alpha += 0.04  # Snappy fade in (~0.35s)
+                    if particle.alpha >= 0.85:
+                        particle.alpha = 0.85
+                        particle.state = "hold"
+                        particle.hold_timer = 0.0
+                        
+                elif state == "hold":
+                    particle.alpha = 0.85
+                    particle.hold_timer += 0.016
+                    if particle.hold_timer >= particle.hold_time:
+                        particle.state = "fadeout"
+                        
+                elif state == "fadeout":
+                    particle.alpha -= 0.04  # Snappy fade out (~0.35s)
+                    if particle.alpha <= 0.0:
+                        particle.alpha = 0.0
+                        eb_reposition_particle(particle)
             else:
                 # Floating mode: fade in/out control
                 if particle.fadein:
@@ -184,6 +234,8 @@ init python:
                         eb_reposition_particle(particle)
             
             # Update displayable with new alpha (using cached path)
+            if not particle.img_path:
+                continue
             t = Transform(particle.img_path, alpha=max(0.0, particle.alpha), zoom=particle.zoom)
             particle.set_child(t)
         
@@ -198,7 +250,7 @@ init python:
         IN:
             particle - The particle to reposition
         """
-        movement_mode = getattr(particle, 'movement_mode', 'floating')
+        movement_mode = particle.movement_mode
         
         if movement_mode == "falling":
             # Falling mode: respawn at top
@@ -206,14 +258,39 @@ init python:
             particle.y = renpy.random.randint(-100, -20)  # Above screen
             
             # New speed and wind
-            particle.speed = random.uniform(0.5, 1.5)
-            particle.wind = random.uniform(-0.3, 0.3)
+            p_type = getattr(particle, 'particle_type', '')
+            if p_type == "glitch":
+                particle.speed = random.uniform(2.0, 4.5)
+                particle.wind = 0.0
+            else:
+                particle.speed = random.uniform(0.5, 1.5)
+                particle.wind = random.uniform(-0.3, 0.3)
+                
             particle.dx = particle.wind
             particle.dy = particle.speed
             
             # Reset zoom for variation
             particle.zoom = random.uniform(0.3, 0.7)
             particle.alpha = random.uniform(0.3, 0.6)
+        elif movement_mode == "popup":
+            # Popup mode: pick a new random image, position, scale, and reset state machine with delay
+            rand_img = renpy.random.choice((0, 1))
+            new_path = eb_get_particle_path(rand_img)
+            # Fallback to dust particle if path resolution fails
+            if new_path:
+                particle.img_path = new_path
+            
+            particle.x = renpy.random.randint(80, max(180, config.screen_width - 250))
+            particle.y = renpy.random.randint(80, max(180, config.screen_height - 200))
+            particle.speed = 0.0
+            particle.dx = 0.0
+            particle.dy = 0.0
+            particle.zoom = random.uniform(0.4, 0.75)
+            particle.alpha = 0.0
+            particle.state = "delay"
+            particle.delay_timer = random.uniform(0.2, 1.5)  # Pause before popping up in new spot
+            particle.hold_time = random.uniform(1.2, 2.8)
+            particle.hold_timer = 0.0
         else:
             # Floating mode: original behavior (optimized with preset angles)
             # New random position
@@ -272,6 +349,9 @@ init python:
         """Handle particles toggle. Called after ToggleField changes the value."""
         global eb_sprite_manager, eb_particle_list
         
+        # Reset temporary disabled state
+        persistent._eb_temp_disabled = False
+        
         if persistent._eb_particles_enabled:
             # Now enabled - create and show particles
             eb_create_particles()
@@ -281,9 +361,9 @@ init python:
             if eb_particle_list:
                 for particle in eb_particle_list:
                     try:
-                        # Set alpha to 0 to make invisible
-                        t = Transform(particle.img_path, alpha=0.0, zoom=particle.zoom)
-                        particle.set_child(t)
+                        if particle.img_path:
+                            t = Transform(particle.img_path, alpha=0.0, zoom=particle.zoom)
+                            particle.set_child(t)
                     except:
                         pass
             
